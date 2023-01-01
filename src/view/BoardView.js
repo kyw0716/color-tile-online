@@ -1,4 +1,4 @@
-import Colors from "../static/Colors.js";
+import tileColors, { backGroundTileColors } from "../static/Colors.js";
 import Tile from "./Tile.js";
 
 export default class BoardView {
@@ -48,15 +48,15 @@ export default class BoardView {
     let color;
 
     if (colorCode) {
-      return new Tile(i, j, Colors[colorCode - 1]);
+      return new Tile(i, j, tileColors[colorCode - 1]);
     }
 
     if (i % 2 === 0) {
-      if (j % 2 === 0) color = "rgb(235, 235, 235)";
-      else color = "rgb(246, 246, 246)";
+      if (j % 2 === 0) color = backGroundTileColors.DARK;
+      else color = backGroundTileColors.LIGHT;
     } else {
-      if (j % 2 === 0) color = "rgb(246, 246, 246)";
-      else color = "rgb(235, 235, 235)";
+      if (j % 2 === 0) color = backGroundTileColors.LIGHT;
+      else color = backGroundTileColors.DARK;
     }
 
     return new Tile(i, j, color);

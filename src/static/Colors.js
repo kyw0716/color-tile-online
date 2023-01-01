@@ -1,4 +1,4 @@
-const Colors = Object.freeze([
+const tileColors = Object.freeze([
   "rgb(193, 92, 255)",
   "rgb(169, 71, 0)",
   "rgb(255, 122, 0)",
@@ -11,7 +11,12 @@ const Colors = Object.freeze([
   "rgb(255, 116, 241)",
 ]);
 
-export default Colors;
+export const backGroundTileColors = Object.freeze({
+  LIGHT: "rgb(246, 246, 246)",
+  DARK: "rgb(235, 235, 235)",
+});
+
+export default tileColors;
 
 // 보라색 rgb(193, 92, 255);
 // 갈색 rgb(169, 71, 0);
