@@ -1,13 +1,13 @@
+import tileColors, { backGroundTileColors } from "../static/Colors.js";
 import RandomNumberGenerator from "../utils/RandomNumberGenerator.js";
+import Tile from "../view/Tile.js";
 
 class BoardModel {
-  #row;
-  #column;
   #board;
+  #tileClickCallback;
 
-  constructor(row, column, maxScore) {
-    this.#row = row;
-    this.#column = column;
+  constructor(row, column, maxScore, tileClickCallback) {
+    this.#tileClickCallback = tileClickCallback;
 
     const emptyOrTile = this.#createEmptyOrTileArray(row, column, maxScore);
     const board = this.#createBoard(row, column, emptyOrTile);
@@ -37,9 +37,11 @@ class BoardModel {
       for (let j = 0; j < column; j++) {
         const tileValue = emptyOrTile.pop();
 
-        if (tileValue === 0) rowContainer.push(tileValue);
+        if (tileValue === 0) rowContainer.push(this.#createTile(i, j));
         if (tileValue !== 0)
-          rowContainer.push(RandomNumberGenerator.generate());
+          rowContainer.push(
+            this.#createTile(i, j, RandomNumberGenerator.generate())
+          );
       }
 
       board.push(rowContainer);
@@ -48,8 +50,30 @@ class BoardModel {
     return board;
   }
 
+  #createTile(i, j, colorCode) {
+    let color;
+
+    if (colorCode) {
+      return new Tile(i, j, tileColors[colorCode - 1], this.#tileClickCallback);
+    }
+
+    if (i % 2 === 0) {
+      if (j % 2 === 0) color = backGroundTileColors.DARK;
+      else color = backGroundTileColors.LIGHT;
+    } else {
+      if (j % 2 === 0) color = backGroundTileColors.LIGHT;
+      else color = backGroundTileColors.DARK;
+    }
+
+    return new Tile(i, j, color, this.#tileClickCallback);
+  }
+
   getBoard() {
     return this.#board;
+  }
+
+  deleteTile(row, column) {
+    this.#board[row][column] = this.#createTile(row, column, 0);
   }
 }
 

@@ -1,6 +1,3 @@
-import tileColors, { backGroundTileColors } from "../static/Colors.js";
-import Tile from "./Tile.js";
-
 export default class BoardView {
   #container;
   #board;
@@ -26,9 +23,7 @@ export default class BoardView {
       const subContainer = this.#createTileRowContainer(i);
 
       for (let j = 0; j < column; j++) {
-        const newTile = this.#createTile(i, j, this.#board[i][j]);
-
-        newTile.printTile(subContainer);
+        this.#board.getBoard()[i][j].printTile(subContainer);
       }
 
       newBoard.appendChild(subContainer);
@@ -42,23 +37,5 @@ export default class BoardView {
     subContainer.style = `display: flex;`;
 
     return subContainer;
-  }
-
-  #createTile(i, j, colorCode) {
-    let color;
-
-    if (colorCode) {
-      return new Tile(i, j, tileColors[colorCode - 1]);
-    }
-
-    if (i % 2 === 0) {
-      if (j % 2 === 0) color = backGroundTileColors.DARK;
-      else color = backGroundTileColors.LIGHT;
-    } else {
-      if (j % 2 === 0) color = backGroundTileColors.LIGHT;
-      else color = backGroundTileColors.DARK;
-    }
-
-    return new Tile(i, j, color);
   }
 }

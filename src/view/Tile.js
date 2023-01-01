@@ -5,12 +5,14 @@ class Tile {
   #column;
   #color;
   #gradientColor;
+  #tileClickCallback;
 
-  constructor(row, column, color) {
+  constructor(row, column, color, tileClickCallback) {
     this.#row = row;
     this.#column = column;
     this.#color = color;
     this.#gradientColor = this.#getGradationColor();
+    this.#tileClickCallback = tileClickCallback;
   }
 
   printTile(container) {
@@ -33,7 +35,8 @@ class Tile {
     Tile.id = `${this.#row}_${this.#column}`;
 
     Tile.addEventListener("click", () => {
-      console.log(Tile.id, tileColors.indexOf(this.#color));
+      const [row, column] = Tile.id.split("_").map(Number);
+      this.#tileClickCallback(row, column, tileColors.indexOf(this.#color));
     });
 
     container.appendChild(Tile);
@@ -41,6 +44,10 @@ class Tile {
 
   #getGradationColor() {
     return this.#color.replace(/rgb/, "rgba").slice(0, -1) + ", 0.6)";
+  }
+
+  getColorCode() {
+    return tileColors.indexOf(this.#color);
   }
 }
 
