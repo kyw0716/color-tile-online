@@ -1,29 +1,32 @@
+import Colors from "../static/Colors.js";
 import Tile from "./Tile.js";
 
 export default class BoardView {
   #container;
+  #board;
 
-  constructor(container) {
+  constructor(container, board) {
     this.#container = container;
+    this.#board = board;
   }
 
-  printBoard(width, height) {
+  printBoard(row, column) {
     const newBoard = document.createElement("div");
 
     newBoard.style =
       "width: 660px; height: 480px; border: 1px solid black; display: flex; flex-direction: column; justify-content: center; align-items: center;";
 
-    this.fillTile(width, height, newBoard);
+    this.#fillTile(row, column, newBoard);
 
     this.#container.appendChild(newBoard);
   }
 
-  fillTile(width, height, newBoard) {
-    for (let i = 0; i < height; i++) {
-      const subContainer = this.createTileRowContainer(i);
+  #fillTile(row, column, newBoard) {
+    for (let i = 0; i < row; i++) {
+      const subContainer = this.#createTileRowContainer(i);
 
-      for (let j = 0; j < width; j++) {
-        const newTile = this.createTile(i, j);
+      for (let j = 0; j < column; j++) {
+        const newTile = this.#createTile(i, j, this.#board[i][j]);
 
         newTile.printTile(subContainer);
       }
@@ -32,7 +35,7 @@ export default class BoardView {
     }
   }
 
-  createTileRowContainer(i) {
+  #createTileRowContainer(i) {
     const subContainer = document.createElement("div");
 
     subContainer.id = `${i}`;
@@ -41,8 +44,12 @@ export default class BoardView {
     return subContainer;
   }
 
-  createTile(i, j) {
+  #createTile(i, j, colorCode) {
     let color;
+
+    if (colorCode) {
+      return new Tile(i, j, Colors[colorCode - 1]);
+    }
 
     if (i % 2 === 0) {
       if (j % 2 === 0) color = "rgb(235, 235, 235)";
