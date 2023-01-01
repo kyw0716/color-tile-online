@@ -1,3 +1,5 @@
+import tileColors from "../static/Colors.js";
+
 class Tile {
   #row;
   #column;
@@ -29,6 +31,10 @@ class Tile {
     }
 
     Tile.id = `${this.#row}_${this.#column}`;
+
+    Tile.addEventListener("click", () => {
+      console.log(Tile.id, tileColors.indexOf(this.#color));
+    });
 
     container.appendChild(Tile);
   }
