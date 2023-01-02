@@ -5,6 +5,7 @@ import Tile from "../view/Tile.js";
 class BoardModel {
   #board;
   #tileClickCallback;
+  #score = 0;
 
   constructor(row, column, maxScore, tileClickCallback) {
     this.#tileClickCallback = tileClickCallback;
@@ -74,6 +75,22 @@ class BoardModel {
 
   deleteTile(row, column) {
     this.#board[row][column] = this.#createTile(row, column, 0);
+  }
+
+  getScore() {
+    return this.#score;
+  }
+
+  addScore(plusScore) {
+    this.#score += plusScore;
+  }
+
+  reset(row, column, maxScore) {
+    const emptyOrTile = this.#createEmptyOrTileArray(row, column, maxScore);
+    const board = this.#createBoard(row, column, emptyOrTile);
+
+    this.#board = board;
+    this.#score = 0;
   }
 }
 

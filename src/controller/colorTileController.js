@@ -9,7 +9,7 @@ export default class colorTileController {
   constructor() {}
 
   startGame() {
-    this.#boardView.printBoard(15, 23);
+    this.#boardView.printStart(this.#boardModel.reset);
   }
 
   tileClickCallback(row, column, colorCode) {
@@ -32,13 +32,15 @@ export default class colorTileController {
       if (colors.length === 0) console.log("틀렸습니다!");
 
       nearTile.forEach((tile) => {
-        if (colors.includes(tile[2]))
+        if (colors.includes(tile[2])) {
           this.#boardModel.deleteTile(tile[0], tile[1]);
+          this.#boardModel.addScore(1);
+        }
       });
     }
 
     container.replaceChildren();
-    this.#boardView.printBoard(15, 23);
+    this.#boardView.printBoard(15, 23, this.#boardModel.getScore());
   }
 
   getUpTile(row, column) {
