@@ -5,26 +5,21 @@ const container = document.querySelector("#app");
 export default class colorTileController {
   #boardModel = new BoardModel(15, 23, 200, this.tileClickCallback.bind(this));
   #boardView = new BoardView(container, this.#boardModel);
+  #boardContainer;
 
   constructor() {}
 
   startGame() {
-    this.#boardView.printStart(this.#boardModel.reset);
+    this.#boardContainer = this.#boardView.getContainer();
+    const startButton = this.#boardView.getStartButton(this.#boardContainer);
+
+    this.#boardContainer.appendChild(startButton);
+    container.appendChild(this.#boardContainer);
   }
 
   tileClickCallback(row, column, colorCode) {
-    const nearTile = [];
-
     if (colorCode === -1) {
-      const upTile = this.getUpTile(row, column);
-      const downTile = this.getDownTile(row, column);
-      const leftTile = this.getLeftTile(row, column);
-      const rightTile = this.getRightTile(row, column);
-
-      if (upTile) nearTile.push(upTile);
-      if (downTile) nearTile.push(downTile);
-      if (leftTile) nearTile.push(leftTile);
-      if (rightTile) nearTile.push(rightTile);
+      const nearTile = this.#getNearTile(row, column);
 
       let colors = nearTile.map((v) => v[2]);
       colors = colors.filter((v, i) => i !== colors.indexOf(v));
@@ -40,10 +35,15 @@ export default class colorTileController {
     }
 
     container.replaceChildren();
-    this.#boardView.printBoard(15, 23, this.#boardModel.getScore());
+    this.#boardView.renderTileBoard(
+      15,
+      23,
+      this.#boardModel.getScore(),
+      this.#boardContainer
+    );
   }
 
-  getUpTile(row, column) {
+  #getUpTile(row, column) {
     const board = this.#boardModel.getBoard();
 
     for (let i = row - 1; i >= 0; i--) {
@@ -53,7 +53,7 @@ export default class colorTileController {
     }
   }
 
-  getDownTile(row, column) {
+  #getDownTile(row, column) {
     const board = this.#boardModel.getBoard();
 
     for (let i = row + 1; i < 15; i++) {
@@ -63,7 +63,7 @@ export default class colorTileController {
     }
   }
 
-  getLeftTile(row, column) {
+  #getLeftTile(row, column) {
     const board = this.#boardModel.getBoard();
 
     for (let i = column - 1; i >= 0; i--) {
@@ -73,7 +73,7 @@ export default class colorTileController {
     }
   }
 
-  getRightTile(row, column) {
+  #getRightTile(row, column) {
     const board = this.#boardModel.getBoard();
 
     for (let i = column + 1; i < 23; i++) {
@@ -81,5 +81,21 @@ export default class colorTileController {
 
       if (colorCode !== -1) return [row, i, colorCode];
     }
+  }
+
+  #getNearTile(row, column) {
+    const nearTile = [];
+
+    const upTile = this.#getUpTile(row, column);
+    const downTile = this.#getDownTile(row, column);
+    const leftTile = this.#getLeftTile(row, column);
+    const rightTile = this.#getRightTile(row, column);
+
+    if (upTile) nearTile.push(upTile);
+    if (downTile) nearTile.push(downTile);
+    if (leftTile) nearTile.push(leftTile);
+    if (rightTile) nearTile.push(rightTile);
+
+    return nearTile;
   }
 }
