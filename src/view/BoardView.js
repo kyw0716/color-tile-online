@@ -96,10 +96,10 @@ export default class BoardView {
     timeSpan.innerHTML = time;
 
     setInterval(() => {
-      time -= 1;
+      time -= 0.1;
       timer.value = time;
-      timeSpan.innerHTML = `${time}`;
-    }, 1000);
+      timeSpan.innerHTML = `${Math.floor(time)}`;
+    }, 100);
 
     timerContainer.appendChild(timer);
     timerContainer.appendChild(timeSpan);
