@@ -11,7 +11,7 @@ export default class BoardView {
     const newBoard = document.createElement("div");
 
     newBoard.style =
-      "width: 660px; height: 480px; border: 1px solid black; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative;";
+      "width: 660px; height: 480px; border: 1px solid lightgrey; border-radius: 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative;";
 
     return newBoard;
   }
@@ -58,7 +58,8 @@ export default class BoardView {
   getStartButton(tileBoard) {
     const startButton = document.createElement("button");
 
-    startButton.innerHTML = `START`;
+    startButton.style = `width: 150px; height: 40px; font-size: 20px; background-color: white; border: none; cursor: pointer; color: rgb(255, 74, 74);`;
+    startButton.innerHTML = `▶️START`;
 
     startButton.addEventListener("click", () => {
       tileBoard.replaceChildren();
@@ -70,7 +71,7 @@ export default class BoardView {
 
         div.innerHTML = `${this.#board.getScore()}점 입니다!`;
         div.style =
-          "display: flex; justify-content: center; align-items: center; flex-direction: column";
+          "display: flex; justify-content: center; align-items: center; flex-direction: column; font-size: 40px; font-weight: bold;";
         div.appendChild(startButton);
 
         this.#board.reset(15, 23, 200);
