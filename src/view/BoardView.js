@@ -17,7 +17,7 @@ export default class BoardView {
   }
 
   renderTileBoard(row, column, score, tileBoard) {
-    if (tileBoard.childElementCount > 1)
+    if (tileBoard.childElementCount > 2)
       for (let i = 0; i < row + 1; i++) {
         tileBoard.removeChild(tileBoard.lastChild);
       }
@@ -55,7 +55,7 @@ export default class BoardView {
     return subContainer;
   }
 
-  getStartButton(tileBoard) {
+  getStartButton(tileBoard, callback) {
     const startButton = document.createElement("button");
 
     startButton.style = `width: 150px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 10px; font-size: 20px; font-weight: bold; background-color: white; border: 1px solid rgb(255, 74, 74); cursor: pointer; color: rgb(255, 74, 74);`;
@@ -64,6 +64,7 @@ export default class BoardView {
     startButton.addEventListener("click", () => {
       tileBoard.replaceChildren();
       this.#renderTimer(tileBoard);
+      this.#renderHomeButton(tileBoard, callback, true);
       this.renderTileBoard(15, 23, this.#board.getScore(), tileBoard);
 
       setTimeout(() => {
@@ -72,7 +73,8 @@ export default class BoardView {
         div.innerHTML = `${this.#board.getScore()}점 입니다!`;
         div.style =
           "display: flex; justify-content: center; align-items: center; flex-direction: column; font-size: 40px; font-weight: bold;";
-        div.appendChild(startButton);
+
+        this.#renderHomeButton(div, callback, false);
 
         this.#board.reset(15, 23, 200);
 
@@ -92,7 +94,7 @@ export default class BoardView {
     practiceModeButton.addEventListener("click", () => {
       tileBoard.replaceChildren();
 
-      this.#renderHomeButton(tileBoard, callback);
+      this.#renderHomeButton(tileBoard, callback, true);
 
       this.renderTileBoard(15, 23, this.#board.getScore(), tileBoard);
     });
@@ -106,7 +108,7 @@ export default class BoardView {
     const timeSpan = document.createElement("span");
     let time = 120;
 
-    timerContainer.style = `position: absolute; top: 20px; left: 40px; display: flex; align-items: center; gap: 5px; font-weight: bold; font-size: 12px`;
+    timerContainer.style = `position: absolute; top: 20px; left: 100px; display: flex; align-items: center; gap: 5px; font-weight: bold; font-size: 12px`;
     timer.style = `width: 400px; height: 20px`;
 
     timer.max = 120;
@@ -125,15 +127,17 @@ export default class BoardView {
     tileBoard.appendChild(timerContainer);
   }
 
-  #renderHomeButton(tileBoard, callback) {
+  #renderHomeButton(tileBoard, callback, isPractice) {
     const homeButton = document.createElement("button");
 
-    homeButton.style = `position: absolute; top: 20px; left: 40px; display: flex; align-items: center; gap: 5px; font-weight: bold; font-size: 12px`;
+    if (isPractice)
+      homeButton.style = `position: absolute; top: 20px; left: 40px; display: flex; align-items: center; gap: 5px; font-weight: bold; font-size: 12px`;
+    else
+      homeButton.style = `width: 150px; height: 40px; margin-top: 10px; display: flex; align-items: center; justify-content: center; border-radius: 10px; font-size: 20px; font-weight: bold; background-color: white; border: 1px solid rgb(125, 221, 65); cursor: pointer; color: rgb(125, 221, 65);`;
     homeButton.innerHTML = `HOME`;
 
     homeButton.addEventListener("click", () => {
       this.#appDisplay.replaceChildren();
-
       callback();
     });
 

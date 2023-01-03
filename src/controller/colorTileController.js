@@ -11,10 +11,13 @@ export default class colorTileController {
 
   startGame() {
     this.#boardContainer = this.#boardView.getContainer();
-    const startButton = this.#boardView.getStartButton(this.#boardContainer);
+    const startButton = this.#boardView.getStartButton(
+      this.#boardContainer,
+      this.homeButtonCallback.bind(this)
+    );
     const practiceModeButton = this.#boardView.getPracticeModeButton(
       this.#boardContainer,
-      this.startGame.bind(this)
+      this.homeButtonCallback.bind(this)
     );
 
     this.#boardContainer.replaceChildren();
@@ -48,6 +51,11 @@ export default class colorTileController {
       this.#boardModel.getScore(),
       this.#boardContainer
     );
+  }
+
+  homeButtonCallback() {
+    this.#boardModel.reset(15, 23, 200);
+    this.startGame();
   }
 
   #getUpTile(row, column) {
