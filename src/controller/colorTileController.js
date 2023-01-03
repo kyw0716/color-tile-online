@@ -12,8 +12,15 @@ export default class colorTileController {
   startGame() {
     this.#boardContainer = this.#boardView.getContainer();
     const startButton = this.#boardView.getStartButton(this.#boardContainer);
+    const practiceModeButton = this.#boardView.getPracticeModeButton(
+      this.#boardContainer,
+      this.startGame.bind(this)
+    );
 
+    this.#boardContainer.replaceChildren();
     this.#boardContainer.appendChild(startButton);
+    this.#boardContainer.appendChild(practiceModeButton);
+
     container.appendChild(this.#boardContainer);
   }
 
