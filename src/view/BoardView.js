@@ -1,6 +1,7 @@
 export default class BoardView {
   #appDisplay;
   #board;
+  #interv;
 
   constructor(container, board) {
     this.#appDisplay = container;
@@ -63,23 +64,9 @@ export default class BoardView {
 
     startButton.addEventListener("click", () => {
       tileBoard.replaceChildren();
-      this.#renderTimer(tileBoard);
+      this.#renderTimer(tileBoard, callback);
       this.#renderHomeButton(tileBoard, callback, true);
       this.renderTileBoard(15, 23, this.#board.getScore(), tileBoard);
-
-      setTimeout(() => {
-        const div = document.createElement("div");
-
-        div.innerHTML = `${this.#board.getScore()}점 입니다!`;
-        div.style =
-          "display: flex; justify-content: center; align-items: center; flex-direction: column; font-size: 40px; font-weight: bold;";
-
-        this.#renderHomeButton(div, callback, false);
-
-        this.#board.reset(15, 23, 200);
-
-        tileBoard.replaceChildren(div);
-      }, 120_000);
     });
 
     return startButton;
@@ -102,7 +89,7 @@ export default class BoardView {
     return practiceModeButton;
   }
 
-  #renderTimer(tileBoard) {
+  #renderTimer(tileBoard, callback) {
     const timerContainer = document.createElement("div");
     const timer = document.createElement("progress");
     const timeSpan = document.createElement("span");
@@ -115,10 +102,28 @@ export default class BoardView {
     timer.value = time;
     timeSpan.innerHTML = time;
 
-    setInterval(() => {
+    if (this.#interv) clearInterval(this.#interv);
+
+    this.#interv = setInterval(() => {
       time -= 0.1;
       timer.value = time;
       timeSpan.innerHTML = `${Math.floor(time)}`;
+
+      if (time < 0) {
+        const div = document.createElement("div");
+
+        div.innerHTML = `${this.#board.getScore()}점 입니다!`;
+        div.style =
+          "display: flex; justify-content: center; align-items: center; flex-direction: column; font-size: 40px; font-weight: bold;";
+
+        this.#renderHomeButton(div, callback, false);
+
+        tileBoard.replaceChildren(div);
+
+        this.#board.reset(15, 23, 200);
+
+        clearInterval(this.#interv);
+      }
     }, 100);
 
     timerContainer.appendChild(timer);
