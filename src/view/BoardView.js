@@ -1,5 +1,6 @@
 import StaticValues from "../static/StaticValues.js";
 import Style from "../static/Style.js";
+import gameAudio from "../utils/GameAudio.js";
 
 export default class BoardView {
   #appDisplay;
@@ -125,6 +126,9 @@ export default class BoardView {
 
       if (time < 0) {
         const div = document.createElement("div");
+
+        if (this.#board.getScore() >= 150) gameAudio.RESULT_OVER_150.play();
+        else gameAudio.RESULT_UNDER_150.play();
 
         div.innerHTML = `${this.#board.getScore()}점 입니다!`;
         div.style = Style.RESULT;

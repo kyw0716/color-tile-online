@@ -40,8 +40,8 @@ export default class colorTileController {
       let colors = nearTile.map((v) => v[StaticValues.TILE_INFO_COLOR]);
       colors = colors.filter((v, i) => i !== colors.indexOf(v));
 
-      if (colors.length === 0) gameAudio.FAIL.play();
-      else gameAudio.SUCCESS.play();
+      if (colors.length === 0) gameAudio.WRONG_TILE_CLICKED.play();
+      else gameAudio.RIGHT_TILE_CLICKED.play();
 
       nearTile.forEach((tile) => {
         if (colors.includes(tile[StaticValues.TILE_INFO_COLOR])) {
