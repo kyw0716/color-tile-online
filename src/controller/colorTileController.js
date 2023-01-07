@@ -1,16 +1,22 @@
 import BoardModel from "../model/BoardModel.js";
+import StaticValues from "../static/StaticValues.js";
+import gameAudio from "../utils/GameAudio.js";
 import BoardView from "../view/BoardView.js";
 const container = document.querySelector("#app");
 
 export default class colorTileController {
-  #boardModel = new BoardModel(15, 23, 200, this.tileClickCallback.bind(this));
+  #boardModel = new BoardModel(
+    StaticValues.BOARD_ROW,
+    StaticValues.BOARD_COLUMN,
+    StaticValues.MAX_SCORE,
+    this.tileClickCallback.bind(this)
+  );
   #boardView = new BoardView(container, this.#boardModel);
-  #boardContainer;
+  #boardContainer = this.#boardView.getContainer();
 
   constructor() {}
 
   startGame() {
-    this.#boardContainer = this.#boardView.getContainer();
     const startButton = this.#boardView.getStartButton(
       this.#boardContainer,
       this.homeButtonCallback.bind(this)
@@ -31,14 +37,18 @@ export default class colorTileController {
     if (colorCode === -1) {
       const nearTile = this.#getNearTile(row, column);
 
-      let colors = nearTile.map((v) => v[2]);
+      let colors = nearTile.map((v) => v[StaticValues.TILE_INFO_COLOR]);
       colors = colors.filter((v, i) => i !== colors.indexOf(v));
 
-      if (colors.length === 0) console.log("틀렸습니다!");
+      if (colors.length === 0) gameAudio.FAIL.play();
+      else gameAudio.SUCCESS.play();
 
       nearTile.forEach((tile) => {
-        if (colors.includes(tile[2])) {
-          this.#boardModel.deleteTile(tile[0], tile[1]);
+        if (colors.includes(tile[StaticValues.TILE_INFO_COLOR])) {
+          this.#boardModel.deleteTile(
+            tile[StaticValues.TILE_INFO_ROW],
+            tile[StaticValues.TILE_INFO_COLUMN]
+          );
           this.#boardModel.addScore(1);
         }
       });
@@ -46,55 +56,63 @@ export default class colorTileController {
 
     container.replaceChildren();
     this.#boardView.renderTileBoard(
-      15,
-      23,
+      StaticValues.BOARD_ROW,
+      StaticValues.BOARD_COLUMN,
       this.#boardModel.getScore(),
       this.#boardContainer
     );
   }
 
   homeButtonCallback() {
-    this.#boardModel.reset(15, 23, 200);
+    this.#boardModel.reset(
+      StaticValues.BOARD_ROW,
+      StaticValues.BOARD_COLUMN,
+      StaticValues.MAX_SCORE
+    );
     this.startGame();
   }
 
   #getUpTile(row, column) {
     const board = this.#boardModel.getBoard();
+    const START_POINT = row - 1;
 
-    for (let i = row - 1; i >= 0; i--) {
+    for (let i = START_POINT; i >= 0; i--) {
       const colorCode = board[i][column].getColorCode();
 
-      if (colorCode !== -1) return [i, column, colorCode];
+      if (colorCode !== StaticValues.NO_COLOR) return [i, column, colorCode];
     }
   }
 
   #getDownTile(row, column) {
     const board = this.#boardModel.getBoard();
+    const START_POINT = row + 1;
 
-    for (let i = row + 1; i < 15; i++) {
+    for (let i = START_POINT; i < StaticValues.BOARD_ROW; i++) {
       const colorCode = board[i][column].getColorCode();
 
-      if (colorCode !== -1) return [i, column, colorCode];
+      if (colorCode !== StaticValues.NO_COLOR) return [i, column, colorCode];
     }
   }
 
   #getLeftTile(row, column) {
     const board = this.#boardModel.getBoard();
+    const START_POINT = column - 1;
 
-    for (let i = column - 1; i >= 0; i--) {
+    for (let i = START_POINT; i >= 0; i--) {
       const colorCode = board[row][i].getColorCode();
 
-      if (colorCode !== -1) return [row, i, colorCode];
+      if (colorCode !== StaticValues.NO_COLOR) return [row, i, colorCode];
     }
   }
 
   #getRightTile(row, column) {
     const board = this.#boardModel.getBoard();
+    const START_POINT = column + 1;
 
-    for (let i = column + 1; i < 23; i++) {
+    for (let i = START_POINT; i < StaticValues.BOARD_COLUMN; i++) {
       const colorCode = board[row][i].getColorCode();
 
-      if (colorCode !== -1) return [row, i, colorCode];
+      if (colorCode !== StaticValues.NO_COLOR) return [row, i, colorCode];
     }
   }
 
