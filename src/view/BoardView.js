@@ -66,6 +66,14 @@ export default class BoardView {
     startButton.innerHTML = `시작하기`;
 
     startButton.addEventListener("click", () => {
+      if (
+        gameAudio.RIGHT_TILE_CLICKED.readyState !== 4 ||
+        gameAudio.WRONG_TILE_CLICKED.readyState !== 4
+      )
+        return;
+
+      gameAudio.RIGHT_TILE_CLICKED.play();
+
       tileBoard.replaceChildren();
       this.#renderTimer(tileBoard, callback);
       this.#renderHomeButton(tileBoard, callback, true);
@@ -88,6 +96,8 @@ export default class BoardView {
 
     practiceModeButton.addEventListener("click", () => {
       clearInterval(this.#interv);
+
+      gameAudio.RIGHT_TILE_CLICKED.play();
 
       tileBoard.replaceChildren();
 
@@ -162,6 +172,9 @@ export default class BoardView {
 
     homeButton.addEventListener("click", () => {
       clearInterval(this.#interv);
+
+      gameAudio.RIGHT_TILE_CLICKED.play();
+
       this.#appDisplay.replaceChildren();
       callback();
     });
